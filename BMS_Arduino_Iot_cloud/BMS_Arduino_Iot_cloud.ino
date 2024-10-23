@@ -18,8 +18,13 @@
 int analogInPin  = 34;    // Analog input pin
 int sensorValue; 
 float calibration = 0.0; // Check Battery voltage using multimeter & add/subtract the value
+int buzzerPin = 32;
+bool hasBeeped = false; 
 
 void setup() {
+  
+  pinMode(buzzerPin, OUTPUT);
+
   // Initialize serial and wait for port to open:
   Serial.begin(9600);
   // This delay gives the chance to wait for a Serial Monitor without blocking if none is found
@@ -55,12 +60,31 @@ void loop() {
   Serial.print("t Battery Percentage = ");
   Serial.println(bat_percentage);
   Serial.println("************************");
-  delay(1000);
+  delay(200);
 
+
+
+if (bat_percentage == 0){
+  hasBeeped =false;
+  digitalWrite(buzzerPin, HIGH);
+  delay(500);
+  digitalWrite(buzzerPin, LOW);
+  delay(500);
+  }
+  
+else if(bat_percentage > 0 && hasBeeped == false){
+  digitalWrite(buzzerPin, HIGH);
+  delay(100);
+  digitalWrite(buzzerPin, LOW);
+  delay(100); 
+  digitalWrite(buzzerPin, HIGH);
+  delay(100);
+  digitalWrite(buzzerPin, LOW);
+  delay(100); 
+  hasBeeped = true;
+  }
 }
-
 float mapfloat(float x, float in_min, float in_max, float out_min, float out_max)
 {
   return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
 }
-
